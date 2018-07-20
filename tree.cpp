@@ -12,7 +12,7 @@ constexpr std::string_view junction("|---"), bar("|   "), angle("\\---"), space(
 constexpr std::string_view junction("├── "), bar("│   "), angle("└── "), space("    ");
 #endif
 
-void walk(const fs::path& path, const int depth = 0, const bool is_last = false, std::vector<std::string_view>& headers = std::vector<std::string_view>()) {
+void walk(const fs::path& path, const int depth, const bool is_last, std::vector<std::string_view>& headers) {
 	for (const auto& token : headers) {
 		std::cout << token;
 	}
@@ -52,7 +52,7 @@ int main(int argc, char* argv[]) {
 
 	const fs::path root((argc > 1) ? argv[1] : ".");
 
-	walk(root);
+	walk(root, 0, false, std::vector<std::string_view>());
 
 	return EXIT_SUCCESS;
 }
