@@ -1,0 +1,7 @@
+#pragma once
+
+#include <string_view>
+
+constexpr std::string_view TREECPP17_VERSION("@tree-cpp17_VERSION@");
+constexpr std::string_view CURRENT_YEAR("@CURRENT_YEAR@");
+constexpr std::string_view CREDITS("@CREDITS@");
