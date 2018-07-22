@@ -5,9 +5,9 @@ This is a C++17 implementation of the GNU `tree` utility, making use of the new 
 This project will make no effort to port the original C code over; instead this project aims to re-implement similar, if not identical, functionality from scratch.
 
 ## Changelog
-Version **0.1.0**
-- Basic implementation.
-- Known issues: Will definitely exceed maximum recursive depth on large directories. (Todo: Think of iterative algorithm instead)
+Version **0.2.0**
+- Added line that prints the number of directories and files.
+- Simplified recursion logic a little.
 
 ## Building
 Use CMake (>= 3.7) to configure the project, then use the compiler or IDE of your choice to build it.
@@ -16,6 +16,8 @@ The source code should compile with any C++17 compatible compiler.
 
 ## To-Do
 - Implement colored output (Decide color scheme?)
+- No support for multibyte characters in filenames yet (Will crash)
+- Find a getopt replacement
 
 ## License
 

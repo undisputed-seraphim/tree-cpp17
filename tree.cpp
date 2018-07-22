@@ -1,6 +1,6 @@
-#include <vector>
 #include <filesystem>
 #include <iostream>
+#include <vector>
 
 #include "config.hpp"
 
@@ -12,22 +12,9 @@ constexpr std::string_view junction("|---"), bar("|   "), angle("\\---"), space(
 constexpr std::string_view junction("├── "), bar("│   "), angle("└── "), space("    ");
 #endif
 
-void walk(const fs::path& path, const int depth, const bool is_last, std::vector<std::string_view>& headers) {
-	for (const auto& token : headers) {
-		std::cout << token;
-	}
-
-	if (depth != 0) {
-		std::cout << (is_last ? angle : junction);
-	}
-
-	std::cout << path.filename().generic_string() << '\n';
-
-	if (depth != 0) {
-		headers.emplace_back(is_last ? space : bar);
-	}
-
+void walk(const fs::path& path, std::vector<std::string_view>& headers, std::pair<int, int>& counter) {
 	if (!fs::is_directory(path)) {
+		++counter.second;
 		return;
 	}
 
@@ -35,8 +22,23 @@ void walk(const fs::path& path, const int depth, const bool is_last, std::vector
 	const auto entry_count = std::distance(fs::begin(dir_iter), fs::end(dir_iter));
 	dir_iter = fs::directory_iterator(path);
 	for (int i = 0; i < entry_count; ++i, ++dir_iter) {
-		walk(dir_iter->path(), depth + 1, (i == entry_count - 1), headers);
-		headers.pop_back();
+		for (const auto& token : headers) {
+			std::cout << token;
+		}
+
+		const bool is_last = (i == entry_count - 1);
+
+		std::cout << (is_last ? angle : junction)
+			<< dir_iter->path().filename().generic_string() << '\n';
+
+		if (fs::is_directory(dir_iter->path())) {
+			++counter.first;
+			headers.emplace_back(is_last ? space : bar);
+			walk(dir_iter->path(), headers, counter);
+			headers.pop_back();
+		} else {
+			++counter.second;
+		}
 	}
 }
 
@@ -50,9 +52,16 @@ int main(int argc, char* argv[]) {
 		return EXIT_SUCCESS;
 	}
 
+	std::pair<int, int> counter = std::make_pair(0, 0);
 	const fs::path root((argc > 1) ? argv[1] : ".");
 
-	walk(root, 0, false, std::vector<std::string_view>());
+	std::cout << root.generic_string() << '\n';
+	walk(root, std::vector<std::string_view>(), counter);
+
+	std::cout << '\n' 
+		<< counter.first << ((counter.first == 1) ? " directory, " : " directories, ")
+		<< counter.second << ((counter.second == 1) ? " file." : " files.")
+		<< std::endl;
 
 	return EXIT_SUCCESS;
 }
