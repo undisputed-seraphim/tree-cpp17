@@ -14,6 +14,8 @@ Use CMake (>= 3.7) to configure the project, then use the compiler or IDE of you
 
 The source code should compile with any C++17 compatible compiler.
 
+Do `-DASCII_ONLY` when calling CMake, to switch the printed output to ASCII characters only (No fancy Unicode) (I will change this to a run-time flag when I figure out a nice getopt replacement.)
+
 ## To-Do
 - Implement colored output (Decide color scheme?)
 - No support for multibyte characters in filenames yet (Will crash)
